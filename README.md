@@ -11,8 +11,9 @@ The main proposes is to development the automatic health care data collecting wi
 <h4>5. Insoles 1 Pair<br><br></h4>
 <h4>6. IR remote and sensor<br><br></h4>
 <h4>7. RGB color LED x2<br><br></h4>
-<h2>How to start?</h2><br><br>
-<h4><h4>1. Wire up</h4><br><br></h4>
+<h4>8. 2.2k Ohm resistors x4<br><br></h4>
+<h2>How to start?</h2>
+<h4><h4>1. Wire up</h4></h4>
 
 ![image alt](https://github.com/PongkunSK/Smart_Insoles/blob/main/Insoles%20Under%20Prototype.jpg?raw=true)
 
