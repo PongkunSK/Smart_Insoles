@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caretaker</title>
+    <link rel="stylesheet" href="/public/css/Caretaker.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+    <script>
+        if (!sessionStorage.getItem('userFirstName')) {
+            window.location.href = '/Login';
+        }
+    </script>
+
+    <div class="container">
+        <button id="openBtn" class="open-btn">&#9776; Open Modal</button>
+        <div id="myModal" class="modal">
+            <div class="modal-content position-relative">
+                <span class="close-btn">&times;</span>
+                <h2>Personal Information</h2>
+                <p>Here is the user history...</p>
+                <table class="table table-bordered table-striped" id="userhistory">
+                    <thead>
+                        <tr>
+                            <th>Time Up and Go Test</th>
+                            <th>Side-by-side-stand Test</th>
+                            <th>Semi-Tandem stand Test</th>
+                            <th>Tandem stand Test</th>
+                            <th>Chair Stand Test</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="userTableBody"></tbody>
+                </table>
+                <button id="logoutBtn" class="btn btn-danger btn-sl position-absolute end-0 bottom-0 m-3">Sign Out</button>
+            </div>
+        </div>
+
+        <div class="header">
+            <h1 id="userName">Name of User</h1>
+        </div>
+
+        <div class="test-container">
+            <div class="test-box" id="TUNGTresult">Time Up and Go Test<br>Loading...</div>
+            <div class="test-box" id="SBSTresult">Side-by-side-stand Test<br>Loading...</div>
+            <div class="test-box" id="STSTestResult">Semi-Tandem stand Test<br>Loading...</div>
+            <div class="test-box" id="TDSTestResult">Tandem stand Test<br>Loading...</div>
+            <div class="test-box" id="CSUTresult">Chair Stand Test<br>Loading...</div>
+        </div>
+        <button id="graph" class="btn btn-warning mt-4">Open Graph</button>
+        <button id="saveResultBtn" class="btn btn-success mt-4">Save Test Results</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Fetch and display test results
+            fetchAndDisplayTestResults();
+
+            // Attach event listeners
+            document.getElementById("saveResultBtn").onclick = saveTestResults;
+            document.getElementById("graph").onclick = () => window.location.href = '/Graph';
+
+            document.getElementById("openBtn").onclick = () => {
+                document.getElementById("myModal").style.display = "block";
+                fetchUsersHistory();
+            };
+
+            document.getElementsByClassName("close-btn")[0].onclick = () => {
+                document.getElementById("myModal").style.display = "none";
+            };
+
+            window.onclick = event => {
+                if (event.target == document.getElementById("myModal")) {
+                    document.getElementById("myModal").style.display = "none";
+                }
+            };
+
+            const firstName = sessionStorage.getItem('userFirstName');
+            const lastName = sessionStorage.getItem('userLastName');
+            if (firstName && lastName) {
+                document.getElementById('userName').innerText = `${firstName} ${lastName}`;
+            }
+        });
+
+        // Sign out functionality with fetch API
+        document.getElementById("logoutBtn").onclick = async function () {
+            try {
+                const response = await fetch('/logout', { method: 'POST' });
+
+                if (response.ok) {
+                    sessionStorage.removeItem('userFirstName');
+                    sessionStorage.removeItem('userLastName');
+                    sessionStorage.removeItem('userId');
+
+                    window.location.href = '/Login';
+
+                    history.replaceState(null, null, '/Login');
+                    history.pushState(null, null, '/Login');
+                } else {
+                    alert('Error during logout');
+                }
+            } catch (error) {
+                alert('Logout failed: ' + error.message);
+            }
+        };
+
+        async function fetchAndDisplayTestResults() {
+            try {
+                const userId = 'insole1'; // Replace with dynamic userID as needed
+
+                const response = await fetch(`/api/test_results?userId=${userId}`, { method: 'GET' });
+
+                if (response.ok) {
+                    const data = await response.json();
+
+                    document.getElementById('TUNGTresult').innerHTML = `Time Up and Go Test<br>${data.TUNGTresult || 'No data available'}`;
+                    document.getElementById('SBSTresult').innerHTML = `Side-by-side-stand Test<br>${data.SBSTresult || 'No data available'}`;
+                    document.getElementById('STSTestResult').innerHTML = `Semi-Tandem stand Test<br>${data.STSTresult || 'No data available'}`;
+                    document.getElementById('TDSTestResult').innerHTML = `Tandem stand Test<br>${data.TDSTresult || 'No data available'}`;
+                    document.getElementById('CSUTresult').innerHTML = `Chair Stand Test<br>${data.CSUTresult || 'No data available'}`;
+                } else {
+                    console.error('Failed to fetch test results. Status:', response.status);
+                }
+            } catch (error) {
+                console.error('Error fetching test results:', error);
+            }
+        }
+
+        async function fetchUsersHistory() {
+            const rfid = sessionStorage.getItem('rfid');
+            try {
+                const response = await fetch(`/api/users/history/${rfid}`);
+                const testResults = await response.json();
+                const userTableBody = document.getElementById('userTableBody');
+                userTableBody.innerHTML = '';
+                testResults.forEach(result => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                            <td>${result.TUNGTresult || 'N/A'}</td>
+                            <td>${result.SBSTresult || 'N/A'}</td>
+                            <td>${result.STSTresult || 'N/A'}</td>
+                            <td>${result.TDSTresult || 'N/A'}</td>
+                            <td>${result.CSUTresult || 'N/A'}</td>
+                            <td>${result.timestamp ? new Date(result.timestamp).toLocaleString() : 'N/A'}</td>
+                        `;
+                    userTableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error fetching user history:', error);
+            }
+        }
+
+        async function saveTestResults() {
+            const rfid = sessionStorage.getItem('rfid');
+            if (!rfid) {
+                alert('Error: RFID not found. Please log in again.');
+                window.location.href = '/Login';
+                return;
+            }
+
+            const TUNGTresult = document.getElementById("TUNGTresult").innerText.split('\n')[1].trim();
+            const SBSTresult = document.getElementById("SBSTresult").innerText.split('\n')[1].trim();
+            const STSTresult = document.getElementById("STSTestResult").innerText.split('\n')[1].trim();
+            const TDSTresult = document.getElementById("TDSTestResult").innerText.split('\n')[1].trim();
+            const CSUTresult = document.getElementById("CSUTresult").innerText.split('\n')[1].trim();
+
+            try {
+                const response = await fetch(`/api/user_history/${rfid}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ TUNGTresult, SBSTresult, STSTresult, TDSTresult, CSUTresult }),
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    alert(result.message);
+                } else {
+                    const error = await response.json();
+                    alert('Failed to save test results: ' + error.message);
+                }
+            } catch (error) {
+                alert('Error saving results: ' + error.message);
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,39 @@
+.Bg{
+    margin: auto;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+   
+}
+.B {
+    width: 350px;
+    background-color: #08e1ed; /* Light blue */
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 60px;
+}
+h1 {
+    font-family: Arial, sans-serif;
+    margin-bottom: 20px;
+}
+.btn {
+    display: block;
+    width: 120px;
+    margin: 20px auto;
+    padding: 10px;
+    font-size: 16px;
+    font-family: Arial, sans-serif;
+    color: #000;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+.insert-card-btn {
+    background-color: #66FF66; /* Green */
+}

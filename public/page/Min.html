@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/public/css/Admin.Css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <title>Admin</title>
+</head>
+
+<body class="BD">
+    <script>
+        // Redirect to login if not authenticated
+        if (!sessionStorage.getItem('userFirstName')) {
+            window.location.href = '/Login';
+        }
+    </script>
+
+    <div class="CTN">
+        <h2>User Lists</h2>
+        <div class="container-fluid">
+            <table class="table table-bordered table-striped" id="usertablecss">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Phone No</th>
+                        <th>RFID</th>
+                        <th>Role</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="userTableBody">
+                    <!-- Users will be dynamically populated -->
+                </tbody>
+            </table>
+            <div class="footer-buttons">
+                <button class="custom-button1" id="logoutBtn">Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Fetch and display users
+async function fetchUsers() {
+    try {
+        const response = await fetch('/api/users');
+        if (response.ok) {
+            const users = await response.json();
+            const userTableBody = document.getElementById('userTableBody');
+            userTableBody.innerHTML = ''; // Clear existing rows
+
+            users.forEach(user => {
+                const row = document.createElement('tr');
+                row.dataset.rfid = user.rfid;  // Set rfid as a data attribute
+
+                row.innerHTML = `
+                    <td>${user.firstName} ${user.lastName}</td>
+                    <td>${user.phoneNo}</td>
+                    <td>${user.rfid}</td>
+                    <td>${user.isAdmin ? 'Admin' : 'User'}</td>
+                    <td>
+                       ${user.isAdmin ? '' : '<button class="custom-button1 delete-btn" onclick="deleteRow(this)">Delete</button>'}
+                    </td>
+                `;
+                userTableBody.appendChild(row);
+            });
+        } else {
+            console.error('Failed to fetch users:', await response.text());
+        }
+    } catch (error) {
+        console.error('Error fetching users:', error);
+    }
+}
+
+
+      // Logout functionality
+      document.getElementById("logoutBtn").onclick = async function () {
+            try {
+                const response = await fetch('/logout', { method: 'POST' });
+                if (response.ok) {
+                    sessionStorage.clear();
+                    window.location.href = '/Login';
+                } else {
+                    alert('Error during logout');
+                }
+            } catch (error) {
+                alert('Logout failed: ' + error.message);
+            }
+        };
+
+        
+        // On page load
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchUsers(); // Populate user table
+        });
+
+        // Function to handle user deletion
+async function deleteRow(button) {
+    const row = button.parentNode.parentNode;
+    const rfid = row.dataset.rfid;  // rfid from data attribute
+    const name = row.cells[0].textContent;  // Get the user's name for confirmation
+
+    // Confirm deletion
+    if (confirm(`Are you sure you want to delete ${name}?`)) {
+        try {
+            // Send DELETE request to delete user from the database using RFID
+            const response = await fetch(`/api/users/${rfid}`, {
+                method: 'DELETE',
+            });
+
+            if (response.ok) {
+                // Remove the row from the table if deletion is successful
+                row.remove();
+            } else {
+                alert('Error deleting user');
+            }
+        } catch (error) {
+            alert('Error during deletion: ' + error.message);
+        }
+    }
+}
+
+
+    </script>
+</body>
+
+</html>

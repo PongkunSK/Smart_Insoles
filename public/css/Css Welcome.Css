@@ -1,0 +1,21 @@
+.BG{
+    margin: auto;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+.Ct{
+    background-color: #08e1ed;
+    width: 350px;
+    text-align: center;
+    padding: 60px;
+    border-radius: 15px;
+}
+.Btn-Custom{
+    margin: 10px 0;
+}

@@ -1,0 +1,123 @@
+ .BD{
+    margin: auto;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+.CTN {
+    width: 80%;
+    background-color: white;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+h2 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.user-table th{
+    text-align: center;
+    padding: 12px 15px;
+    border-bottom: 1px solid #ddd;
+}
+.user-table td {
+    text-align: center;
+    padding: 12px 15px;
+    border-bottom: 1px solid #ddd;
+}
+
+.user-table th {
+    background-color: #08e1ed;
+    color: #333;
+}
+
+.status-button,
+.edit-button {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 20px;
+    font-size: 14px;
+    cursor: pointer;
+    color: white;
+}
+
+.edit-button:hover,
+.status-button:hover {
+    opacity: 0.8;
+}
+
+.footer-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.custom-button {
+    background-color: #05f511; /* Light pink background */
+    border: none;
+    border-radius: 25px; /* Rounded edges */
+    color: rgb(245, 242, 242);
+    font-size: 16px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.custom-button:active {
+    transform: scale(1);
+}
+
+.action-btn {
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: none;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  .enable-btn {
+    background-color: #0cd831;
+  }
+  .disable-btn {
+    background-color: #fa0303;
+  }
+  .edit-btn {
+    background-color: #e8f407;
+  }
+  #usertablecss th{
+    background-color: #08e1ed;
+    color: #333;
+  }
+
+  .custom-button1 {
+    background-color: #f80606;  /* ปรับสีพื้นหลัง */
+    color: white;  /* ปรับสีข้อความ */
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 10px;  /* ให้ปุ่มมีมุมโค้ง */
+    transition: background-color 0.3s ease;  /* เอฟเฟกต์เวลาเมื่อเลื่อนเมาส์ */
+}
+
+.custom-button1:hover {
+    background-color: #b30000;  /* เปลี่ยนสีพื้นหลังเมื่อเอาเมาส์ไปวาง */
+    transform: scale(1.1);
+}
+
+.delete-btn {
+    margin-top: 5px;  /* ระยะห่างจากข้อความถัดไป */
+}

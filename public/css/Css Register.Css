@@ -1,0 +1,88 @@
+body {
+    margin: auto;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-color: #f0f8ff; /* Light background color as fallback */
+}
+
+.container {
+    padding: 20px;
+    width: 100%;
+    max-width: 1000px;
+    margin: 100px auto;
+    background-color: #b3f0ff; /* Light blue */
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+h1 {
+    font-family: Arial, sans-serif;
+    margin-bottom: 20px;
+}
+
+.btn {
+    transition: background-color 0.3s ease, color 0.3s ease;
+    font-size: 16px; /* ปรับขนาดฟอนต์ให้เหมาะสม */
+    padding: 8px 16px; /* ปรับขนาดปุ่ม */
+}
+
+.btn:hover {
+    background-color: #000;
+    color: #fff;
+}
+
+.insert-card-btn {
+    background-color: #66FF66; /* Green */
+}
+
+.back-btn {
+    background-color: #FF6666; /* Red */
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+form label {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+form input {
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease; /* Smooth transition for border and shadow */
+}
+
+form input:focus {
+    outline: none;
+    border-color: #66FF66; /* Matches the green button */
+    box-shadow: 0 0 5px rgba(102, 255, 102, 0.5);
+}
+
+/* ปุ่ม Submit ขนาดเล็กและจัดไปมุมขวา */
+form button[type="button"] {
+    font-size: 16px;
+    padding: 8px 16px;
+    border-radius: 5px;
+    border: none;
+}
+
+form .back-btn {
+    margin-right: 10px; /* ให้ปุ่ม back อยู่ติดกับปุ่ม Submit */
+}
+
+form .btn-primary {
+    float: right; /* จัดปุ่ม Submit ไปมุมขวา */
+}
