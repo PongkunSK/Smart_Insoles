@@ -4,9 +4,9 @@ const mongoose = require('mongoose');
 const testResultSchema = new mongoose.Schema({
   userID: String,
   TUNGTresult: String,
-  SBSresult: String,
-  STSresult: String,
-  TDSresult: String,
+  SBSTresult: String,
+  STSTresult: String,
+  TDSTresult: String,
   CSUTresult: String,
   timestamp: { type: Date, default: Date.now }
 });

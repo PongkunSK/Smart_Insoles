@@ -287,30 +287,53 @@ app.get('/api/users/history/:rfid', isAuthenticated, async (req, res) => {
 
 const SensorData = require('./models/sensorData'); // Import the SensorData model
 
-// POST Route
+// POST Route for sensor data with multiple entries
 app.post('/api/sensor_data', async (req, res) => {
-    const { userID, RFsensor, RBsensor, LFsensor, LBsensor } = req.body;
-    console.log(req.body);  // Log the incoming request body for debugging
-
-    // Validate input
-    if (!userID || RFsensor == null || RBsensor == null || LFsensor == null || LBsensor == null) {
-        return res.status(400).json({ error: 'All fields are required' });
-    }
+    const { userId, data } = req.body;
 
     try {
-        const newSensorData = new SensorData({
-            userID,
-            RFsensor,
-            RBsensor,
-            LFsensor,
-            LBsensor,
-        });
+        if (data && Array.isArray(data)) {
+            // Loop through the received data and store each test's sensor readings
+            for (let i = 0; i < data.length; i++) {
+                const testEntry = data[i];
 
-        await newSensorData.save();
-        res.status(200).json({ message: 'Sensor data saved successfully!' });
+                if (
+                    Array.isArray(testEntry.LFsensor) &&
+                    Array.isArray(testEntry.LBsensor) &&
+                    Array.isArray(testEntry.RFsensor) &&
+                    Array.isArray(testEntry.RBsensor)
+                ) {
+                    // Iterate through the individual sensor readings and save them
+                    const numReadings = Math.min(
+                        testEntry.LFsensor.length,
+                        testEntry.LBsensor.length,
+                        testEntry.RFsensor.length,
+                        testEntry.RBsensor.length
+                    );
+
+                    for (let j = 0; j < numReadings; j++) {
+                        const sensorData = new SensorData({
+                            userID: userId,
+                            RFsensor: testEntry.RFsensor[j],
+                            RBsensor: testEntry.RBsensor[j],
+                            LFsensor: testEntry.LFsensor[j],
+                            LBsensor: testEntry.LBsensor[j]
+                        });
+
+                        await sensorData.save();
+                    }
+                } else {
+                    return res.status(400).send("Invalid sensor data format");
+                }
+            }
+
+            res.status(200).send("Data saved successfully");
+        } else {
+            res.status(400).send("Invalid data format");
+        }
     } catch (error) {
-        console.error('Error saving sensor data:', error);
-        res.status(500).json({ error: 'Failed to save sensor data' });
+        console.error(error);
+        res.status(500).send("Error saving data");
     }
 });
 
@@ -333,18 +356,16 @@ app.delete('/api/users/:rfid', isAdmin, async (req, res) => {
     }
 });
 
-// Fetch sensor data by userID
-app.get('/api/sensor_data/:userID', async (req, res) => {
-    const { userID } = req.params;
+// GET Route to retrieve sensor data for a user
+app.get('/api/sensor_data/:userId', async (req, res) => {
+    const { userId } = req.params;
+
     try {
-        // Fetch latest 200 sensor data entries from MongoDB
-        const sensorData = await SensorData.find({ userID })
-            .sort({ timestamp: -1 })  // Sort by timestamp in descending order
-            .limit(200);  // Limit to 200 records
-        res.json(sensorData);
+        const sensorData = await SensorData.find({ userId }).sort( 'createdAt' ).limit(200);
+        res.status(200).json(sensorData);
     } catch (error) {
         console.error('Error fetching sensor data:', error);
-        res.status(500).json({ message: 'Failed to fetch sensor data' });
+        res.status(500).json({ error: 'Failed to fetch sensor data' });
     }
 });
 
