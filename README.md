@@ -33,6 +33,7 @@ The insole devices are based on **low-cost IoT technologies**. The collected dat
 
 ### 1. Wire Up the Components
 ![Wiring](https://github.com/PongkunSK/Smart_Insoles/blob/main/Image/Insoles%20Under%20Prototype.jpg?raw=true)
+![Circuit](https://github.com/PongkunSK/Smart_Insoles/blob/main/Image/Circuit_SmartInsoles.png?raw=true)
 
 ### 2. Prepare the Firmware (Arduino IDE)
 1. Download the `SPPB_Test_Prototype` folder.
